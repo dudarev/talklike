@@ -14,6 +14,8 @@ Fill in:
     Dictionary link: http://onelook.com/?w=
     Translate to by default: ru
 
+Browse to
+
     New > Section
 
 Fill in
