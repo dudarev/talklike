@@ -2,6 +2,6 @@ This is a set of routines to prepare lists of words for each line of the transcr
 
     python find_forms.py
 
-Fix form_many.txt.
+Fix form_many.txt and then run
 
     python create_forms_subs.py
