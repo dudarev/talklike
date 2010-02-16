@@ -1,0 +1,67 @@
+<html>
+  <head>
+      <title>Submit a Video</title>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/video.css" />
+      <link type="image/x-icon" href="/static/favicon.ico" rel="shortcut icon"/>
+      <script type="text/javascript" src="/static/json2.js"></script>
+      <script type="text/javascript" src="/static/submit_video.js"></script>
+  </head>
+
+  <div id = "content" >
+
+      <h1>New {{kind}}</h1>
+
+<form action="submit_new_{{kind}}" method="post" name="submit_form" id="form">
+
+<table class="form">
+      <tbody>
+
+  {% for line in lines%}
+        <tr>
+            <td valign="top">
+                {{line.text}}
+            </td>
+            <td>
+                {%ifequal line.type 'text'%}
+                <input type="{{line.type}}" size="{{line.size}}" name="{{line.name}}" value="{{line.value}}"/>
+                {%endifequal%}
+                {%ifequal line.type 'textarea'%}
+                <textarea name="{{line.name}}" rows="20" cols="55" value="{{line.value}}"/></textarea>
+                {%endifequal%}
+                {%ifequal line.type 'select'%}
+                <select name="{{line.name}}">
+                {%for value in line.values %} <option value="{{value}}">{{value}}</option> {%endfor%}
+                </select>
+                {%endifequal%}
+            </td>
+        </tr>
+   {% endfor %}
+      
+      <tr>
+        <td/>
+        <td class="buttons">
+
+          <input id="submit_video" type="submit" value="Submit"
+          onclick="doSubmitVideo()" /><br>
+        </td>
+      </tr>
+    </tbody></table></form>
+    <span id="request_result"></span>
+
+    <br>
+    <a href = "/admin">Admin page</a>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-82981-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+  </body>
+</html>

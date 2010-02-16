@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Main moderation page</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="image/x-icon" href="/static/favicon.ico" rel="shortcut icon"/>
+  </head>
+
+  <body>
+
+      {% if message %}
+      <div id = "message">{{message}}</div>
+      {% endif %}
+
+      <div id = "content">
+
+          <p>
+          <b>New</b>: &nbsp;&nbsp;&nbsp;
+          <a href = "/admin/new_language">Language</a>&nbsp;&nbsp;&nbsp;
+          <a href = "/admin/new_section">Section</a>&nbsp;&nbsp;&nbsp;
+          <a href = "/admin/new_video">Video</a>&nbsp;&nbsp;&nbsp;
+          </p>
+
+          <h1>Sections</h1>
+
+          <p>
+          <b>Edit</b>: &nbsp;&nbsp;&nbsp; {% for s in sections %}
+          <a href = "/admin/edit/section/{{s.name}}">{{s.name}}</a>&nbsp;&nbsp;&nbsp;{% endfor %}
+          </p>
+
+          <p>
+          <b>Backup</b>: &nbsp;&nbsp;&nbsp;
+          {% for s in sections %}
+          <a href = "/admin/backup/section/{{s.name}}.xml">{{s.name}}</a>&nbsp;&nbsp;&nbsp;
+          {% endfor %}
+          </p>
+
+          <p>
+          <a href = "/admin/request_backup_file">Upload</a> a backup file
+          </p>
+
+          <h1>Languages</h1>
+          <p>
+          <b>Edit</b>: &nbsp;&nbsp;&nbsp; {% for l in languages %}
+          <a href = "/admin/edit/language/{{l.code}}">{{l.code}}</a>&nbsp;&nbsp;&nbsp;{% endfor %}
+          </p>
+
+
+
+  <h4>
+  <a href = "../">Main page</a>
+  </h4>
+  {{logout_link}}
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-82981-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section>
+    <name>{{section.name}}</name>
+    <language>{{section.language}}</language> {% for v in videos %}
+    <video>
+        <ytid>{{v.ytid}}</ytid>
+        <title>{{v.title }}</title>
+        <words>{{v.words }}</words>
+        <times>{{v.times }}</times>
+        <time_added>{{v.time_added }}</time_added>
+        {% if v.transcript %}
+        <transcript>{{v.transcript}}</transcript>{% endif %}
+    </video>{% endfor %}
+</section>

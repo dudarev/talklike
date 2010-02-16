@@ -1,0 +1,58 @@
+<html>
+  <head>
+      <title>Load backup</title>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/video.css" />
+      <link type="image/x-icon" href="/static/favicon.ico" rel="shortcut icon"/>
+  </head>
+
+    <div id = "content" >
+        <h1>Load backup</h1>
+
+        <form action="process_backup" method="post" name="load_backup" enctype="multipart/form-data">
+
+        <table class="form">
+            <tbody>
+
+            <tr>
+            <td valign="top" align="right">
+                Backup file:
+            </td>
+            <td>
+                <input type="file" name="backup_file" size="30">
+            </td>
+            </tr>
+
+            <tr>
+            <td valign="top" align="right">
+                Overwrite existing:
+            </td>
+            <td valign="top">
+                <input type="checkbox" name="overwrite" value="true">
+            </td>
+            </tr>
+
+            <tr>
+              <td/>
+              <td class="buttons">
+                <input type="submit" value="Load"/><br>
+              </td>
+            </tr>
+
+    </tbody></table></form><br>
+
+    <a href = "/admin">Admin page</a>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-82981-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+  </body>
+</html>

@@ -1,0 +1,20 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://www.talklike.com">
+
+<id>http://www.talklike.com/{{section}}/feed</id>
+  <title>Talk Like {{section_title}}</title>
+  <updated>{{last_time}}</updated>
+
+  <link href="/{{section}}" />
+  <link rel="self" href="/{{section}}/feed" />
+
+  {% for v in videos %}
+  <entry>
+    <id>http://www.talklike.com/{{section}}/video/{{v.ytid}}</id>
+    <title>{{v.title}}</title>
+    <link href="/{{section}}/video/{{v.ytid}}" />
+    <updated>{{v.time_formated}}</updated>
+    <summary></summary>
+  </entry>
+  {% endfor %}
+
+</feed>

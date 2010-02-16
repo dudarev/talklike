@@ -1,0 +1,49 @@
+body {
+    margin:3em 5em;
+    text-align:left;
+    text-decoration:none;
+    font-family: verdana, helvetica;
+    background-color: white;
+}
+
+#warning{
+    color: red;
+    font-style: italic;
+}
+
+#content{
+    width:1300px;
+}
+
+#player{
+    width:500px;
+    float:left;
+}
+
+#sidebar{
+    width:750px;
+    float:left;
+}
+
+#transcript_form{
+    float:left;
+    margin:0px 5px;
+}
+
+#player_controls{
+    width:1000px;
+}
+
+#submit_moves ul { list-style-type:none; margin:0px}
+
+a.time:hover, a.time:active {
+    background-color:yellow;
+}
+
+a.timemoderate, a.timemoderate:hover, a.timemoderate:active {
+    background-color:#F8E0E0;
+}
+
+#required_error{
+    color:red;
+}

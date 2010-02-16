@@ -1,0 +1,89 @@
+<html>
+  <head>
+      <title>Edit section: {{section.name}} </title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="image/x-icon" href="/static/favicon.ico" rel="shortcut icon"/>
+  </head>
+
+  <body>
+
+      <div id = "content">
+
+          <h1>Edit section: {{section.name}} </h1>
+
+
+          <b>First video:</b> {{section.first.ytid}} "{{section.first.title}}"<br/><br/>
+
+          {% for v in videos%}
+          <p>
+          <a href = "/admin/edit/video/{{v.ytid}}">{{v.ytid}}</a>
+          {% if v.title %} "{{v.title}}" {% endif %}
+          &nbsp;&nbsp;&nbsp;
+          {% if v.approved %}
+          <a href = "/admin/disapprove/section/{{section.name}}/video/{{v.ytid}}">Disapprove</a>
+          {% else %}
+          <a href = "/admin/approve/section/{{section.name}}/video/{{v.ytid}}">Approve</a>
+          {% endif %}
+          &nbsp;&nbsp;&nbsp; 
+          <a href = "/admin/edit/section/{{section.name}}/first/{{v.ytid}}">Make first</a> &nbsp;&nbsp;&nbsp;
+          <a href = "/submit_transcript/{{v.ytid}}">Transcript</a> &nbsp;&nbsp;&nbsp;<br/>
+          </p>
+          {% endfor %}
+
+<form action="/admin/update_old_section" method="post" name="submit_form" id="form">
+<input name="section" value="{{section.name}}" type="hidden"/>
+<table class="form">
+      <tbody>
+  {% for line in lines%}
+        <tr>
+            <td valign="top">
+                {{line.text}}
+            </td>
+            <td>
+                {%ifequal line.type 'text'%}
+                <input type="{{line.type}}" size="{{line.size}}" name="{{line.name}}" value="{{line.value}}"/>
+                {%endifequal%}
+                {%ifequal line.type 'textarea'%}
+                <textarea name="{{line.name}}" rows="20" cols="55" value="{{line.value}}"/></textarea>
+                {%endifequal%}
+                {%ifequal line.type 'select'%}
+                <select name="{{line.name}}">
+                {%for value in line.values %} <option value="{{value}}">{{value}}</option> {%endfor%}
+                </select>
+                {%endifequal%}
+            </td>
+        </tr>
+        {% endfor %}
+
+      <tr>
+        <td/>
+        <td class="buttons">
+          <input id="submit" type="submit" value="Submit"/><br>
+        </td>
+      </tr>
+
+    </tbody> </table> </form>
+
+
+  <h4>
+  <a href = "/admin">Admin page</a>
+  </h4>
+  <h4>
+  <a href = "/">Main page</a>
+  </h4>
+
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-82981-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>
+

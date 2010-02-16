@@ -1,0 +1,181 @@
+body {
+    margin:3em 7em;
+    text-align:left;
+    color:#666666;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+    text-decoration:none;
+}
+
+h1 {
+    font-size:18px;
+    width:425px;
+}
+
+h4 {
+    font-size:14px;
+}
+
+div#qTip {
+    padding: 3px;
+    border: 1px solid #00f;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    display: none;
+    background: #FFF;
+    color: #000;
+    text-align: left;
+    position: absolute;
+    z-index: 1000;
+}
+
+.paddedImage{
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.siteName{
+    color:#2461AA;
+    font-size:36px;
+    font-weight:bold;
+}
+
+#header .top .nav {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+
+#content {
+    width:1000px;
+}
+
+#content-title {
+    width:400px;
+    text-align:left;
+}
+
+#footer-title {
+    width:400px;
+    text-align:left;
+    font-size:10px;
+}
+
+hr {
+    border: 0px;
+    color:#2461AA;
+    background-color:#2461AA;
+    height: 1px;
+}
+
+#abstract{
+    width:35em;
+}
+
+#player_and_controls{
+    width:1000px;
+}
+
+#footer
+{
+    clear: both;
+    margin: 0;
+    padding: .5em;
+    background-color: #ddd;
+    border-top: 1px solid gray;
+}
+
+#subtitle_translated {
+    width:425px;
+    text-align:center;
+}
+
+#subtitle{
+    width:425px;
+    text-align:center;
+}
+#player{
+    float:right;
+}
+
+#words_sidebar{
+    width:200px;
+    float:left;
+}
+
+#translate_subscribe_ads{
+    width:200px;
+    float:left;
+}
+
+#subscribe_sidebar{
+    width:200px;
+    float:left;
+}
+
+table.videos td {
+    padding: 0px 5em 0px 0px;
+}
+
+#request_result {
+    color:#3366FF;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style-type:none;
+    margin: 0 0 0.5em;
+}
+
+#player{
+    width:470px;
+    float:left;
+}
+
+#submit_moves{
+    width:400px;
+    float:left;
+}
+
+#player_controls{
+    width:1000px;
+}
+
+#submit_moves ul { list-style-type:none; margin:0px}
+
+#message {
+    border: 1px solid;
+    margin: 30px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
+#branding {
+    margin-top: 10px;
+    color:#777777;
+    text-align: left;
+    height: 20px;
+}
+
+#translate_button{
+}
+
+#translation_progress{
+    margin-top: 5px;
+    color:#777777;
+    font-size:11px;
+}
+
+form #dst{
+    margin-bottom: 5px;
+}
+
+.buttons{
+    padding:5px;
+}

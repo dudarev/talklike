@@ -1,0 +1,484 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Talk Like {{section_title}}</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="image/x-icon" href="/static/favicon.ico" rel="shortcut icon"/>
+    <link rel="alternate" title="Atom 1.0 Feed" type="application/atom+xml" href="{{section.feed}}" />
+    <script src="http://swfobject.googlecode.com/svn/tags/rc3/swfobject/src/swfobject.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        // Handy "macro"
+        function $(id){
+        return document.getElementById(id);
+        }
+        var dict_link = '{{dict_link}}';
+        var ids = new Array();
+        var times = new Array();
+        {% if times %}
+        times = [{{times}}];
+        {% else %}
+        times = [];
+        {% endif %}
+        var subs_translated_temp = []; 
+        var words_translated_temp = []; 
+        {% if transcript %}
+        var transcript = "{{transcript}}";
+        var subs = transcript.split('/');
+        var subs_translated = [];
+
+        {% else %}
+        transcript = '';
+        subs = []
+        {% endif %}
+        {% if words %}
+        transcript_words = "{{words}}";
+        var words = transcript_words.split('/');
+        var words_translated = [];
+        {% else %}
+        transcript_words = '';
+        var words = []
+        var words_translated = [];
+        {% endif %}
+
+        document.onkeydown = KeyDownHandler;
+        document.onkeyup = KeyUpHandler;
+        var CTRL = false;       
+        var ALT = false;
+
+        // this is not to load subtitles if time of new subtitle is not reached
+        var last_i = -1;
+        var last_ct = 0;
+
+        function KeyDownHandler(e) {
+            key = e.keyCode || e.which;
+            if(key == 17)
+                CTRL = true;
+            if(key == 18)
+                ALT = true;
+            if(CTRL && ALT){
+                change_state();
+            }
+            if( CTRL && (key == 49) ){
+                seekTo(getCurrentTime()-7);
+            }
+            if( CTRL && (key == 50) ){
+                seekTo(getCurrentTime()+7);
+            }
+            if( CTRL && (key == 51) ){
+                times.push(parseFloat(getCurrentTime()));
+                times.sort(function(a,b){return a - b});
+                updateTimes();
+            }
+        }
+
+        function KeyUpHandler(e) {
+            CTRL = false;       
+            ALT = false;
+        }
+
+        function updateTimes(i) {
+            $('times').innerHTML = '';
+            for(var i=0,j=times.length; i<j; i++){
+                $('times').innerHTML += '<a class="time" id="'+i+'" href="javascript:void(0);"\
+                onclick="seekTo('+times[i]+');">'+times[i]+'</a> &nbsp;\
+                <a class="delete" id="'+i+'" href="javascript:void(0);"\
+                onclick="deleteTime('+i+');">x</a> &nbsp;&nbsp;&nbsp;'
+                $('times_string').value = times.toString();
+            }
+        }
+
+        function deleteTime(i) {
+            times.splice(i, 1); 
+            updateTimes();
+        }
+
+        {% if moves %}
+        {% for m in moves %}{% if m %}times[{{m.id}}] = {{m.time}};
+        {% endif %}{% endfor %}
+        var ids = new Array();
+        for(var i=0,j=times.length; i<j; i++){
+            ids[i] = ''+i;
+        }
+        {% endif %}
+        function updateHTML(elmId, value) {
+            $(elmId).innerHTML = value;
+            times.sort()
+        }
+
+        function setytplayerState(newState) {
+          updateHTML("playerstate", newState);
+        }
+
+        function onYouTubePlayerReady(playerId) {
+          ytplayer = $("myytplayer");
+          setInterval(updateytplayerInfo, 250);
+          updateytplayerInfo();
+          ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
+          ytplayer.addEventListener("onError", "onPlayerError");
+            $('times').innerHTML = '';
+            for(var i=0,j=times.length; i<j; i++){
+                  $('times').innerHTML += '<a class="time" id="'+i+'" href="javascript:void(0);"\
+                  onclick="seekTo('+times[i]+');">'+times[i]+'</a> &nbsp;\
+                  <a class="delete" id="'+i+'" href="javascript:void(0);"\
+                  onclick="deleteTime('+times[i]+');">x</a> &nbsp;&nbsp;&nbsp;'
+            }
+        }
+
+        function onytplayerStateChange(newState) {
+          setytplayerState(newState);
+        }
+
+        function onPlayerError(errorCode) {
+          alert("An error occurred: "+ errorCode);
+        }
+
+        // functions for the api calls
+        function play() {
+          if (ytplayer) {
+            ytplayer.playVideo();
+          }
+        }
+
+        function change_state() {
+          if (ytplayer) {
+            state = ytplayer.getPlayerState();
+            if ( state == 2 ){
+                play();
+            } else {
+                pause();
+            }
+          }
+        }
+
+        function pause() {
+          if (ytplayer) {
+            ytplayer.pauseVideo();
+          }
+        }
+
+        function stop() {
+          if (ytplayer) {
+            ytplayer.stopVideo();
+          }
+        }
+
+        function getPlayerState() {
+          if (ytplayer) {
+            return ytplayer.getPlayerState();
+          }
+        }
+
+        function seekTo(seconds) {
+          if (ytplayer) {
+            ytplayer.seekTo(seconds, true);
+          }
+        }
+
+        function getBytesLoaded() {
+          if (ytplayer) {
+            return ytplayer.getVideoBytesLoaded();
+          }
+        }
+
+        function getBytesTotal() {
+          if (ytplayer) {
+            return ytplayer.getVideoBytesTotal();
+          }
+        }
+
+        function getCurrentTime() {
+          if (ytplayer) {
+
+            ct = ytplayer.getCurrentTime();
+            if (ct < 0) { 
+                ct = 0;
+            }
+            if (ct < last_ct){
+                last_i = -1;
+            }
+            last_ct = ct;
+            for(var i=((times.length)-1),j=-1; i>j; i--)
+                if(ct > times[i]){
+                    if(i > last_i){
+                        $("subtitle").innerHTML = subs[i];
+                        $("subtitle_translated").innerHTML = $("t"+i).innerHTML;
+                        // $("subtitle_translated").innerHTML = subs_translated[i];
+                        words_now = words[i].split(';');
+                        words_now_translated = $("w"+i).innerHTML.split('.');
+                        // words_now_translated = words_translated[i].split('.');
+                        $("words_sidebar").innerHTML = '';
+                        links = '';
+                        for(var ii=0,jj=words_now.length; ii<jj; ii++){
+                            w = words_now[ii].replace(/^\s*|\s*$/g,'');
+                            links += "<a target='_blank' href='"+dict_link+encodeURIComponent(w);
+                            links += "' title='"+words_now_translated[ii]+"' title = ''>"+w;
+                            links += '</a><br/>';
+                        }
+                        $("words_sidebar").innerHTML = links;
+                        tooltip.init();
+                        last_i = i;
+                    }
+                    return ct.toFixed(1)
+                }
+            return ct.toFixed(1)
+          }
+        }
+
+        function updateytplayerInfo() {
+          getCurrentTime();
+        }
+
+        function getDuration() {
+          if (ytplayer) {
+            return ytplayer.getDuration();
+          }
+        }
+
+        function getStartBytes() {
+          if (ytplayer) {
+            return ytplayer.getVideoStartBytes();
+          }
+        }
+
+        function mute() {
+          if (ytplayer) {
+            ytplayer.mute();
+          }
+        }
+
+        function unMute() {
+          if (ytplayer) {
+            ytplayer.unMute();
+          }
+        }
+
+    </script>
+    <script language="JavaScript" src="/static/qTip.js" type="text/JavaScript"></script>
+  </head>
+
+  <body>
+
+    <div id="header">
+      <div class="top">
+          <div class="nav">
+              <a href="/{{section.name}}/videos">videos</a> |
+              <a href="/">home</a>
+          </div>
+      </div>
+    </div>
+
+  <div id = "content">
+
+
+      <h1>{{title}}</h1>
+      <div id="player_and_controls">
+          <div id="player">
+        <div id="ytapiplayer">
+          You need Flash player 8+ and JavaScript enabled to view this video.
+        </div>
+        <script type="text/javascript">
+
+          // allowScriptAccess must be set to allow the Javascript from one domain to access the swf on the youtube domain
+          var params = { allowScriptAccess: "always" };
+          // this sets the id of the object or embed tag to 'myytplayer'. You then use this id to access the swf and make calls to the player's API
+          var atts = { id: "myytplayer" };
+          swfobject.embedSWF("http://www.youtube.com/v/{{ytid}}&amp;border=0&amp;enablejsapi=1&amp;playerapiid=ytplayer&amp;autoplay=1", 
+                             "ytapiplayer", "425", "344", "8", null, null, params, atts);
+                         </script>
+                         <br/>
+        <h4 id="subtitle"></h4>
+        <h4 id="subtitle_translated"></h4>
+         </div>
+
+         <div id="words_sidebar">&nbsp;</div>
+
+         <div id="translate_subscribe_ads">
+
+          <form class="query-box" onsubmit="return submitChange();">
+          <select name="dst" id="dst"></select>
+          <input class="button" type="submit" id="translate_button" value="Translate"/>
+          <div id="translation_progress"></div>
+          <div id="branding"></div>
+      </form>
+
+      <hr/>
+
+      <div class="buttons">
+
+        <a href="http://delicious.com/save" onclick="window.open('http://delicious.com/save?v=5&amp;noui&amp;jump=close&amp;url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title), 'delicious','toolbar=no,width=550,height=550'); return false;"> 
+<img border=0 src="http://static.delicious.com/img/delicious.small.gif" height="16" width="16" alt="Delicious" />
+</a>
+
+<a href="http://www.stumbleupon.com/submit?url=http%3A%2F%2Fwww.talklike.com%2F{{section.name}}"><img border=0 src="http://cdn.stumble-upon.com/images/16x16_su_3d.gif" alt="StumbleUpon"></a>
+
+<a href="http://digg.com/submit?url=http%3A%2F%2Fwww.talklike.com%2F{{section.name}}&title=Talk%20Like%20{{section_title}}">
+<img border=0 src="http://digg.com/img/badges/16x16-digg-guy.png" width="16" height="16" alt="Digg!" />
+</a>
+      </div>
+
+      <hr/>
+
+      <div class="buttons">
+
+          <a href="{{section.feed}}"><img border=0 src="/static/feed.png" alt="feed"></a>
+<a href="http://twitter.com/talklike"><img border=0 src="/static/twitter.png" alt="feed"></a>
+
+      </div>
+
+      <br/>
+
+      </div>
+
+  </div>
+
+    </div>
+
+  <div id = "translation" style="display:none">
+      translation is here
+  </div>
+
+
+</div>
+
+  <script type="text/javascript">
+    google.load("language", "1");
+    google.setOnLoadCallback(init);
+    var id_translate = 0;
+
+    function init() {
+
+      var dst = $('dst');
+      for (l in google.language.Languages) {
+        var lng = l.toLowerCase();
+        var lngCode = google.language.Languages[l];
+        if (google.language.isTranslatable(lngCode)) {
+            if (lngCode === '{{section.language.translate_to_default}}'){
+
+                var newOption = document.createElement('option');
+                newOption.setAttribute("value", lngCode);
+                newOption.setAttribute("selected", "selected");
+                newOption.text = lng;
+                dst.options.add(newOption);
+
+            } else {
+                dst.options.add(new Option(lng, lngCode));
+            }
+        }
+      }
+
+      google.language.getBranding('branding');
+
+      submitChangeFirst();
+    }
+
+    function submitChangeFirst() {
+      var src = '{{section.language.code}}';
+      var dest = $('dst').value;
+      for(var i=0,j=subs.length; i<j; i++){
+          var p = document.createElement('p');
+          p.setAttribute('id', 't'+i);
+          $('translation').appendChild(p);
+          var p = document.createElement('p');
+          p.setAttribute('id', 'w'+i);
+          $('translation').appendChild(p);
+      }
+      for(var i=0,j=subs.length; i<j; i++){
+          google.language.translate(subs[i], src, dest, translateSubsFirst);
+          google.language.translate(words[i].replace(/;/g,'.'), src, dest, translateWordsFirst);
+      }
+      return false;
+    }
+
+    function translateSubsFirst(result) {
+      if (result.translation) {
+          var str = result.translation.replace('>', '&gt;').replace('<', '&lt;');
+          subs_translated.push(str);
+          if(id_translate < subs.length){ 
+              $('t'+id_translate).innerHTML = str;
+          }
+      } else {
+          return;
+      }
+    }
+
+    function translateWordsFirst(result) {
+      if (result.translation) {
+        var str = result.translation.replace('>', '&gt;').replace('<', '&lt;');
+        words_translated.push(str);
+        if(id_translate < subs.length){ 
+            $('w'+id_translate).innerHTML = str;
+            id_translate++;
+        }
+      } else {
+          return;
+      }
+    }
+
+function submitChange() {
+
+      $('translation_progress').innerHTML = 'Translating 0/' + subs.length.toString();
+
+      id_translate = 0;
+      subs_translated_temp = []; 
+      words_translated_temp = []; 
+      var src = '{{section.language.code}}';
+      var dest = $('dst').value;
+      for(var i=0,j=subs.length; i<j; i++){
+          google.language.translate(subs[i], src, dest, translateSubs);
+          google.language.translate(words[i].replace(/;/g,'.'), src, dest, translateWords);
+      }
+      // subs_translated = subs_translated_temp;
+      // words_translated = words_translated_temp;
+
+      return false;
+    }
+
+    function translateSubs(result) {
+      if (result.translation) {
+          var str = result.translation.replace('>', '&gt;').replace('<', '&lt;');
+              subs_translated_temp.push(str);
+              if(id_translate < subs.length){ 
+                  $('t'+id_translate).innerHTML = str;
+              }
+          // $('subtitle_translated').innerHTML = str;
+      } else {
+          return;
+      }
+    }
+
+    function translateWords(result) {
+      if (result.translation) {
+        var str = result.translation.replace('>', '&gt;').replace('<', '&lt;');
+        words_translated_temp.push(str);
+        if(id_translate < subs.length){ 
+            $('w'+id_translate).innerHTML = str;
+            id_translate++;
+            if(id_translate == subs.length){ 
+                $('translation_progress').innerHTML = 'Translation is finished';
+            } else {
+                $('translation_progress').innerHTML = 'Translating '+ id_translate.toString() + '/' + subs.length.toString();
+            }
+        } 
+        // $('subtitle_translated').innerHTML = str;
+      } else {
+          return;
+      }
+    }
+
+</script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-82981-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+  </body>
+</html>
+
